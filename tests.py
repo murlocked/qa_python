@@ -30,7 +30,7 @@ class TestBooksCollector:
         collector.add_new_book(book_titles[0])
         collector.set_book_genre(book_titles[0], genres[0])
 
-        assert collector.books_genre == {book_titles[0]: genres[0]}
+        assert collector.get_books_genre() == {book_titles[0]: genres[0]}
 
     @pytest.mark.parametrize('genre', ['123', 'pewpew', 'mewmew'])
     def test_set_book_genre_set_incorrect_genres(self, genre):
@@ -39,7 +39,7 @@ class TestBooksCollector:
         collector.add_new_book(book_titles[0])
         collector.set_book_genre(book_titles[0], genre)
 
-        assert collector.books_genre == {book_titles[0]: ''}
+        assert collector.get_books_genre() == {book_titles[0]: ''}
 
     def test_get_book_genre_genre_exists(self):
         collector = BooksCollector()
@@ -103,14 +103,14 @@ class TestBooksCollector:
         collector.add_new_book(book_titles[0])
         collector.add_book_in_favorites(book_titles[0])
 
-        assert len(collector.favorites) == 1
+        assert len(collector.get_list_of_favorites_books()) == 1
 
     def test_add_book_in_favorites_book_not_from_books_genre_list(self):
         collector = BooksCollector()
 
         collector.add_book_in_favorites(book_titles[0])
 
-        assert len(collector.favorites) == 0
+        assert len(collector.get_list_of_favorites_books()) == 0
 
     def test_add_book_in_favorites_add_book_twice(self):
         collector = BooksCollector()
@@ -119,7 +119,7 @@ class TestBooksCollector:
         collector.add_book_in_favorites(book_titles[0])
         collector.add_book_in_favorites(book_titles[0])
 
-        assert not len(collector.favorites) == 2
+        assert len(collector.get_list_of_favorites_books()) == 1
 
     def test_delete_book_from_favorites_if_book_exists(self):
         collector = BooksCollector()
@@ -128,14 +128,15 @@ class TestBooksCollector:
         collector.add_book_in_favorites(book_titles[0])
         collector.delete_book_from_favorites(book_titles[0])
 
-        assert len(collector.favorites) == 0
+        assert len(collector.get_list_of_favorites_books()) == 0
 
     def test_delete_book_from_favorites_if_favorites_empty(self):
         collector = BooksCollector()
 
         collector.add_new_book(book_titles[0])
+        collector.delete_book_from_favorites(book_titles[0])
 
-        assert not collector.delete_book_from_favorites(book_titles[0])
+        assert len(collector.get_list_of_favorites_books()) == 0
 
     def test_get_list_of_favorites_books_two_favorites_in_list(self):
         collector = BooksCollector()
